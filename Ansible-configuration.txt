@@ -1,0 +1,82 @@
+Ansible configuration b/w Server and Client
+
+Step1: Launch Amazon ec2 instance : (2-instances)
+
+Step2: Connect the instance via SSH
+
+step3: login as root
+===================================  configuration on server side  ===========================		
+Step4: Change the host name
+# hostamectl set-hostname <server.com>
+
+Step5: Install the epel for Amazon linux
+# yum-config-manager --enable epel
+
+Step6: Install ansible
+# yum insall ansible -y
+
+Step7: Edit the hosts file in ansible
+# cd /ete/ansible
+  ls
+  vi hosts
+
+  [Webservers]
+  <Private IP of client> ansible_user=ec2-user ansible_password=12345
+  :wq
+
+Step8: Add the user in suder file
+
+visudo
+
+## Allow root to run any commands anywhere
+root    ALL=(ALL)       ALL
+ec2-user ALL=(ALL)   NOPASSWD: ALL
+ :wq
+
+Step9: Edit the sshd_config file 
+cd /etc/ssh
+vi sshd_config
+
+PasswordAuthentication yes
+
+:wq
+
+Step10: Restart the sshd
+
+# service sshd restart
+
+
+============================   configuration on client side   ==============================
+
+Step1: change the host name
+# hostnamectl set-hostname <client.com>
+
+Step2: update the instance
+# yum update -y
+
+step3: change the password of ec2-user 
+# passwd ec2-user
+
+NOTE: Here change the ec2-user password, becouse of we menction the ec2-user in /etc/ansible/hosts in server
+
+step4: Edit the suder file
+visudo
+ ## Allow root to run any commands anywhere
+root    ALL=(ALL)       ALL
+ec2-user ALL=(ALL)   NOPASSWD: ALL
+ :wq
+
+Step5: Edit the sshd_config file 
+
+cd /etc/ssh
+vi sshd_config
+
+PasswordAuthentication yes
+
+:wq
+
+Step6: Restart the sshd
+
+# service sshd restart
+
+
